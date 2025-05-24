@@ -107,11 +107,13 @@ local function createAddonsFrame()
     toggleButton.Font = Enum.Font.GothamBold
     toggleButton.TextSize = 14
     toggleButton.Text = "Open Addons"
+    toggleButton.Draggable = true
+    toggleButton.Active = true
     toggleButton.Parent = screenGui
 
     local addonsFrame = Instance.new("Frame")
     addonsFrame.Size = UDim2.new(0, 250, 0, 140)
-    addonsFrame.Position = UDim2.new(0.02, 0, 0.55, 0) -- Bottom left area
+    addonsFrame.Position = UDim2.new(0, 10, 0, 0.60)
     addonsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     addonsFrame.BorderSizePixel = 0
     addonsFrame.Visible = false
