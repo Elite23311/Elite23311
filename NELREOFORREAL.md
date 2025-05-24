@@ -97,3 +97,88 @@ local flowNames = {
 
 createSelector("Styles", "Style Changer", styleNames, "Style", UDim2.new(0.02, 0, 0.15, 0))
 createSelector("Flows", "Flow Changer", flowNames, "Flow", UDim2.new(0.22, 0, 0.15, 0))
+
+local function createAddonsFrame()
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Size = UDim2.new(0, 120, 0, 30)
+    toggleButton.Position = UDim2.new(0.42, 0, 0.15, 0)
+    toggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    toggleButton.TextColor3 = Color3.new(1, 1, 1)
+    toggleButton.Font = Enum.Font.GothamBold
+    toggleButton.TextSize = 14
+    toggleButton.Text = "Open Addons"
+    toggleButton.Draggable = true
+    toggleButton.Active = true
+    toggleButton.Parent = screenGui
+
+    local addonsFrame = Instance.new("Frame")
+    addonsFrame.Size = UDim2.new(0, 250, 0, 140)
+    addonsFrame.Position = UDim2.new(0, 470, 0, 200)
+    addonsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    addonsFrame.BorderSizePixel = 0
+    addonsFrame.Visible = false
+    addonsFrame.Parent = screenGui
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, 0, 0, 20)
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
+    titleLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 14
+    titleLabel.Text = "Addons"
+    titleLabel.Parent = addonsFrame
+
+    local function createButton(text, yPos, callback)
+        local button = Instance.new("TextButton")
+        button.Size = UDim2.new(0, 230, 0, 30)
+        button.Position = UDim2.new(0, 10, 0, yPos)
+        button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        button.TextColor3 = Color3.new(1, 1, 1)
+        button.Font = Enum.Font.Gotham
+        button.TextSize = 14
+        button.Text = text
+        button.Parent = addonsFrame
+        button.MouseButton1Click:Connect(callback)
+    end
+
+    createButton("No Cooldown", 25, function()
+        local success, err = pcall(function()
+            local C = require(game:GetService("ReplicatedStorage"):WaitForChild("Controllers"):WaitForChild("AbilityController"))
+            local o = C.AbilityCooldown
+            C.AbilityCooldown = function(s, n, ...)
+                return o(s, n, 0, ...)
+            end
+            print("No Cooldown enabled.")
+        end)
+        if not success then warn("Cooldown Error:", err) end
+    end)
+
+    createButton("Toggle Inf Flow", 60, function()
+        local stat = player:FindFirstChild("PlayerStats") and player.PlayerStats:FindFirstChild("InFlow")
+        if stat and stat:IsA("BoolValue") then
+            stat.Value = not stat.Value
+            print("InFlow:", stat.Value)
+        else
+            warn("InFlow not found or invalid.")
+        end
+    end)
+
+    createButton("Toggle Inf Awakening", 95, function()
+        local stat = player:FindFirstChild("PlayerStats") and player.PlayerStats:FindFirstChild("InAwakening")
+        if stat and stat:IsA("BoolValue") then
+            stat.Value = not stat.Value
+            print("InAwakening:", stat.Value)
+        else
+            warn("InAwakening not found or invalid.")
+        end
+    end)
+
+    toggleButton.MouseButton1Click:Connect(function()
+        addonsFrame.Visible = not addonsFrame.Visible
+        toggleButton.Text = addonsFrame.Visible and "Close Addons" or "Open Addons"
+    end)
+end
+
+createAddonsFrame()
+
